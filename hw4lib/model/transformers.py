@@ -164,8 +164,10 @@ class DecoderOnlyTransformer(nn.Module):
         x = self.target_embedding(padded_targets)
         
         # TODO: Apply positional encoding
+        self.positional_encoding =  self.positional_encoding .to(padded_targets.device)
         x = self.positional_encoding(x)
         # TODO: Apply dropout 
+        self.dropout = self.dropout.to(padded_targets.device)
         x = self.dropout(x)
 
         # TODO: Pass through all decoder layers, save attention masks
@@ -182,8 +184,10 @@ class DecoderOnlyTransformer(nn.Module):
             runnint_att['layer{}_dec_self'.format(i + 1)] = attention
 
         # TODO: Apply normalization
+        self.norm = self.norm.to(padded_targets.device)
         x = self.norm(x)
         # TODO: Linear layer (Final Projection) for next character prediction
+        self.final_linear = self.final_linear.to(padded_targets.device)
         seq_out = self.final_linear(x)
         
         # TODO: Return the output sequence and running attention weights

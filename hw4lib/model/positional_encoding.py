@@ -73,5 +73,5 @@ class PositionalEncoding(nn.Module):
         if seq_len > self.pe.size(1):
             raise ValueError(f"Sequence length {seq_len} exceeds the maximum length {self.pe.size(1)}")
         # Step 3: Add positional encodings to input
-        emb_with_pe = x + self.pe[:, :seq_len, :]
+        emb_with_pe = x + self.pe[:, :seq_len, :].to(x.device)
         return emb_with_pe
