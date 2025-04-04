@@ -166,6 +166,45 @@ class SequenceGenerator:
         
         # TODO: Implement greedy search
         
+        # batch_size, seq_len = x.shape
+        # device = x.device
+
+        # # Initialize tensors for scores and finished flags
+        # scores = torch.zeros(batch_size, device=device)
+        # finished = torch.zeros(batch_size, dtype=torch.bool, device=device)
+
+        # # Preallocate output tensor with max_length
+        # generated = torch.full((batch_size, self.max_length), self.tokenizer.pad_id, device=device, dtype=torch.long)
+        # generated[:, :seq_len] = x  # Copy initial input sequences
+
+        # # Prepare mask to track active sequences
+        # active = torch.ones(batch_size, dtype=torch.bool, device=device)
+
+        # for step in range(seq_len, self.max_length):
+        #     if not active.any():
+        #         break  # Stop if all sequences are finished
+
+        #     # Compute logits for next token prediction
+        #     logits = self.score_fn(generated[:, :step])  # (batch_size, vocab_size)
+        #     logits = self._apply_repeat_penalty(logits, generated[:, :step], repeat_penalty)
+        #     logits /= temperature  # Apply temperature scaling
+        #     log_probs = torch.log_softmax(logits, dim=-1)
+
+        #     # Select the highest probability token
+        #     next_tokens = log_probs.argmax(dim=-1)  # (batch_size,)
+        #     token_scores = log_probs.gather(1, next_tokens.unsqueeze(1)).squeeze(1)  # (batch_size,)
+
+        #     # Update scores only for active sequences
+        #     scores = torch.where(active, scores + token_scores, scores)
+
+        #     # Append next tokens
+        #     generated[:, step] = next_tokens
+
+        #     # Check for EOS token
+        #     eos_mask = next_tokens == self.tokenizer.eos_id
+        #     active &= ~eos_mask  # Mark sequences as finished
+
+        # return generated, scores
         batch_size, seq_len = x.shape
         device = x.device
 
@@ -184,9 +223,14 @@ class SequenceGenerator:
             if not active.any():
                 break  # Stop if all sequences are finished
 
-            # Compute logits for next token prediction
-            logits = self.score_fn(generated[:, :step])  # (batch_size, vocab_size)
-            logits = self._apply_repeat_penalty(logits, generated[:, :step], repeat_penalty)
+            # Slice input and compute input_lengths for downstream use
+            input_so_far = generated[:, :step]
+            input_lengths = (input_so_far != self.tokenizer.pad_id).sum(dim=1)
+            input_so_far.input_lengths = input_lengths  # Patch input_lengths for score_fn
+
+            # Compute logits
+            logits = self.score_fn(input_so_far)  # (batch_size, vocab_size)
+            logits = self._apply_repeat_penalty(logits, input_so_far, repeat_penalty)
             logits /= temperature  # Apply temperature scaling
             log_probs = torch.log_softmax(logits, dim=-1)
 

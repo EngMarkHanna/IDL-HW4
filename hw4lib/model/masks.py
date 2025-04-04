@@ -31,6 +31,10 @@ def PadMask(padded_input, input_lengths):
     
     range_tensor = torch.arange(seq_len, device=padded_input.device).expand(batch_size, -1)
     
+    if input_lengths is None:
+        # Infer sequence lengths by finding the last non-zero index in each sequence
+        input_lengths = (padded_input != 0).sum(dim=1)
+    
     mask = range_tensor >= input_lengths.unsqueeze(1)
     
     return mask

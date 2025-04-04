@@ -53,7 +53,7 @@ class LMTrainer(BaseTrainer):
         # TODO: Initialize the criterion
         # How would you set the ignore_index? 
         # Use value in config to set the label_smoothing argument
-        self.criterion = nn.CrossEntropyLoss(label_smoothing=self.config['training']['label_smoothing'], ignore_index=self.tokenizer.pad_token_id)
+        self.criterion = nn.CrossEntropyLoss(label_smoothing=self.config['loss']['label_smoothing'], ignore_index=self.tokenizer.pad_id)
         # raise NotImplementedError # Remove once implemented
 
     def _train_epoch(self, dataloader) -> Tuple[Dict[str, float], Dict[str, torch.Tensor]]:
@@ -395,7 +395,7 @@ class LMTrainer(BaseTrainer):
             else:
                 # TODO: Use the prompts and the generate_greedy method you implemented in the SequenceGenerator class to generate sequences
                 print("Generating with greedy search...")
-                seqs, scores = generator.generate_greedy(prompts, max_length=generation_config['max_length'], temperature=generation_config['temperature'])
+                seqs, scores = generator.generate_greedy(prompts, temperature=generation_config['temperature'])
                 # raise NotImplementedError # Remove if you implemented the greedy search method
 
         # Post-process sequences (trim upto EOS token)
