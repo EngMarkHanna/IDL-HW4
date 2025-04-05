@@ -105,7 +105,7 @@ class LMTrainer(BaseTrainer):
             loss = raw_loss / self.config['training']['gradient_accumulation_steps']
             
             # TODO: Backpropagate the loss
-            self.scaler = torch.cuda.amp.GradScaler()
+            self.scaler = torch.amp.GradScaler(device=self.device)
         
             # Only update weights after accumulating enough gradients
             if (i + 1) % self.config['training']['gradient_accumulation_steps'] == 0:
