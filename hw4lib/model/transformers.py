@@ -119,7 +119,7 @@ class DecoderOnlyTransformer(nn.Module):
         
         # TODO: Create a ModuleList of decoder layers based on the number of layers
         self.dec_layers     =  nn.ModuleList([SelfAttentionDecoderLayer(d_model, num_heads, d_ff, dropout) for _ in range(num_layers)]) # ModuleList of decoder layers
-
+        
         # TODO: Create target embedding and other layers
         self.target_embedding       = nn.Embedding(num_classes, d_model) # Target embedding
         self.positional_encoding    = PositionalEncoding(d_model, max_len) # Positional encoding
@@ -178,6 +178,7 @@ class DecoderOnlyTransformer(nn.Module):
                 continue
             
             # TODO: Pass through decoder layer
+            self.dec_layers[i] = self.dec_layers[i].to(padded_targets.device)
             x, attention = self.dec_layers[i](x, pad_mask_dec, causal_mask)
             
             # TODO: Save attention weights  
