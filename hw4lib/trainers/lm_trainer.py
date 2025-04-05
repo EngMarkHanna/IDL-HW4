@@ -54,6 +54,7 @@ class LMTrainer(BaseTrainer):
         # How would you set the ignore_index? 
         # Use value in config to set the label_smoothing argument
         self.criterion = nn.CrossEntropyLoss(label_smoothing=self.config['loss']['label_smoothing'], ignore_index=self.tokenizer.pad_id)
+        self.scaler = torch.amp.GradScaler(device=self.device)
         # raise NotImplementedError # Remove once implemented
 
     def _train_epoch(self, dataloader) -> Tuple[Dict[str, float], Dict[str, torch.Tensor]]:
@@ -105,7 +106,7 @@ class LMTrainer(BaseTrainer):
             loss = raw_loss / self.config['training']['gradient_accumulation_steps']
             
             # TODO: Backpropagate the loss
-            self.scaler = torch.amp.GradScaler(device=self.device)
+            self.scaler.scale(loss).backward()
         
             # Only update weights after accumulating enough gradients
             if (i + 1) % self.config['training']['gradient_accumulation_steps'] == 0:
