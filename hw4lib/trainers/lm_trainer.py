@@ -70,6 +70,7 @@ class LMTrainer(BaseTrainer):
         # raise NotImplementedError # Remove once implemented
         
         # Initialize training variables
+        self.model = self.model.to(self.device)
         self.model.train()
         batch_bar = tqdm(total=len(dataloader), dynamic_ncols=True, leave=False, position=0, desc=f"[Training LM]")
         running_ce_loss = 0.0

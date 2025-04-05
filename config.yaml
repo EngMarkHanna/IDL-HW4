@@ -1,5 +1,5 @@
 
-Name                      : "Enter-Name-Here"
+Name                      : "Mark"
 
 ###### Tokenization ------------------------------------------------------------
 tokenization:
@@ -37,7 +37,7 @@ training:
   resume                      : False  # Resume an existing run (run_id != 'none')
   epochs                      : 20
   gradient_accumulation_steps : 1
-  wandb_project               : "Set-Project-Name-Here" # wandb project to log to
+  wandb_project               : "hw4" # wandb project to log to
 
 ###### Loss ----------------------------------------------------------------------
 loss: # Just good ol' CrossEntropy
