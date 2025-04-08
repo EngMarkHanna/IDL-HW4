@@ -320,14 +320,14 @@ class ASRDataset(Dataset):
 
             # TODO: Collect transcript lengths from the batch into a tensor
             # Note: Use list comprehension to collect the transcript lengths from the batch   
-            transcript_lengths = torch.tensor([sample[2].shape[0] for sample in batch], dtype=torch.long)
-# B  
+            # transcript_lengths = torch.tensor([sample[2].shape[0] for sample in batch], dtype=torch.long) #Changed here 
 
             # TODO: Pad transcripts to create a batch of fixed-length padded transcripts
             # Note: Use torch.nn.utils.rnn.pad_sequence to pad the transcripts (use pad_token as the padding value)
             padded_shifted     = pad_sequence(batch_shifted, batch_first=True, padding_value=self.tokenizer.pad_id) # B x T
             padded_golden      = pad_sequence(batch_golden, batch_first=True, padding_value=self.tokenizer.pad_id) # B x T
 
+            transcript_lengths = torch.tensor([len(seq) for seq in batch_golden], dtype=torch.long)
         # TODO: Apply SpecAugment for training
         if self.config["specaug"] and self.isTrainPartition:
             # TODO: Permute the features to (B x F x T)
