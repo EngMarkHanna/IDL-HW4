@@ -107,10 +107,14 @@ class ASRTrainer(BaseTrainer):
         for i, batch in enumerate(dataloader):
             # TODO: Unpack batch and move to device
             feats, targets_shifted, targets_golden, feat_lengths, transcript_lengths = batch
-
+            targets_shifted = targets_shifted.to(self.device)
+            targets_golden = targets_golden.to(self.device)
+            feat_lengths = feat_lengths.to(self.device)
+            transcript_lengths = transcript_lengths.to(self.device)
+            
+            
             with torch.autocast(device_type=self.device, dtype=torch.float16):
                 # TODO: get raw predictions and attention weights and ctc inputs from model
-                feats = feats.to(self.device, dtype=torch.get_autocast_dtype(self.device))
                 seq_out, curr_att, ctc_inputs = self.model(
                     feats, feat_lengths, targets_shifted, transcript_lengths
                 )
@@ -121,7 +125,7 @@ class ASRTrainer(BaseTrainer):
                 # TODO: Calculate CE loss
                 ce_loss = self.ce_criterion(
                     seq_out.view(-1, seq_out.size(-1)), 
-                    targets_shifted.view(-1)
+                    targets_golden.view(-1) #instead of target shifted, Changed here
                 )
                 
                 
@@ -129,7 +133,7 @@ class ASRTrainer(BaseTrainer):
                 if self.ctc_weight > 0:
                     ctc_loss = self.ctc_criterion(
                         ctc_inputs.log_softmax(2).transpose(0, 1),
-                        targets_golden,
+                        targets_golden[:, :-1], #Changed here
                         feat_lengths,
                         transcript_lengths
                     )
@@ -404,7 +408,12 @@ class ASRTrainer(BaseTrainer):
                 # TODO: Unpack batch and move to device
                 # TODO: Handle both cases where targets may or may not be None (val set v. test set) 
                 feats, _, targets_golden, feat_lengths, _ = batch
-                
+                feats = feats.to(self.device)
+                feat_lengths = feat_lengths.to(self.device)
+                if targets_golden is not None:
+                    targets_golden = targets_golden.to(self.device)
+    
+    
                 # TODO: Encode speech features to hidden states
                 encoder_output, pad_mask_src, _, _ = self.model.encode(feats, feat_lengths)
                 

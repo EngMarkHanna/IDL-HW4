@@ -32,13 +32,7 @@ def PadMask(padded_input, input_lengths):
     # range_tensor = torch.arange(seq_len, device=padded_input.device).expand(batch_size, -1)
     
     if input_lengths is None:
-        # If input is 3D (e.g., [N, T, feature_dim]), reduce over feature dim
-        if padded_input.dim() == 3:
-            # Sum energy across feature dim, then count frames that aren't all zero
-            input_lengths = (padded_input.abs().sum(dim=-1) > 0).sum(dim=1)  # shape: [N]
-        else:
-            # For 2D input, just count non-zero tokens
-            input_lengths = (padded_input != 0).sum(dim=1)
+        input_lengths = (padded_input != 0).sum(dim=1)
 
     # Create range tensor of shape (N, T)
     range_tensor = torch.arange(seq_len, device=padded_input.device).expand(batch_size, seq_len)
