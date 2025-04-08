@@ -352,6 +352,10 @@ class EncoderDecoderTransformer(nn.Module):
         x_enc = self.dropout(x_enc)
 
         # TODO: Create source padding mask on the same device as the input
+        print("[DEBUG] x_enc shape:", x_enc.shape)
+        print("[DEBUG] x_enc_lengths shape:", x_enc_lengths.shape)
+        print("[DEBUG] x_enc_lengths:", x_enc_lengths)
+
         pad_mask_src = PadMask(x_enc, x_enc_lengths).to(x_enc.device)
 
         # TODO: Pass through encoder layers and save attention weights
