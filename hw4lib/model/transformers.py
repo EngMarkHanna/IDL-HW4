@@ -160,14 +160,14 @@ class DecoderOnlyTransformer(nn.Module):
         
         
         # TODO: Apply the embedding
-        self.target_embedding = self.target_embedding.to(padded_targets.device)
+        # self.target_embedding = self.target_embedding.to(padded_targets.device)
         x = self.target_embedding(padded_targets)
         
         # TODO: Apply positional encoding
-        self.positional_encoding =  self.positional_encoding .to(padded_targets.device)
+        # self.positional_encoding =  self.positional_encoding .to(padded_targets.device)
         x = self.positional_encoding(x)
         # TODO: Apply dropout 
-        self.dropout = self.dropout.to(padded_targets.device)
+        # self.dropout = self.dropout.to(padded_targets.device)
         x = self.dropout(x)
 
         # TODO: Pass through all decoder layers, save attention masks
@@ -178,17 +178,17 @@ class DecoderOnlyTransformer(nn.Module):
                 continue
             
             # TODO: Pass through decoder layer
-            self.dec_layers[i] = self.dec_layers[i].to(padded_targets.device)
+            # self.dec_layers[i] = self.dec_layers[i].to(padded_targets.device)
             x, attention = self.dec_layers[i](x, pad_mask_dec, causal_mask)
             
             # TODO: Save attention weights  
             runnint_att['layer{}_dec_self'.format(i + 1)] = attention
 
         # TODO: Apply normalization
-        self.norm = self.norm.to(padded_targets.device)
+        # self.norm = self.norm.to(padded_targets.device)
         x = self.norm(x)
         # TODO: Linear layer (Final Projection) for next character prediction
-        self.final_linear = self.final_linear.to(padded_targets.device)
+        # self.final_linear = self.final_linear.to(padded_targets.device)
         seq_out = self.final_linear(x)
         
         # TODO: Return the output sequence and running attention weights
