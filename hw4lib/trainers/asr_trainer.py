@@ -113,8 +113,9 @@ class ASRTrainer(BaseTrainer):
             transcript_lengths = transcript_lengths.to(self.device)
             
             
-            with torch.autocast(device_type=self.device, dtype=torch.float16):
+            with torch.autocast(device_type=self.device, dtype=torch.get_autocast_dtype(self.device)):  #torch.float16
                 # TODO: get raw predictions and attention weights and ctc inputs from model
+                
                 seq_out, curr_att, ctc_inputs = self.model(
                     feats, feat_lengths, targets_shifted, transcript_lengths
                 )
