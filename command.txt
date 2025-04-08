@@ -1,0 +1,4 @@
+git reset HEAD~1
+git add --all --force
+git commit -m "Force overwrite all files with updated versions"
+git push origin main --force
