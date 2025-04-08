@@ -327,7 +327,8 @@ class ASRDataset(Dataset):
             padded_shifted     = pad_sequence(batch_shifted, batch_first=True, padding_value=self.tokenizer.pad_id) # B x T
             padded_golden      = pad_sequence(batch_golden, batch_first=True, padding_value=self.tokenizer.pad_id) # B x T
 
-            transcript_lengths = torch.tensor([len(seq) for seq in batch_golden], dtype=torch.long)
+            transcript_lengths = (padded_golden != self.tokenizer.pad_id).sum(dim=1)
+            
         # TODO: Apply SpecAugment for training
         if self.config["specaug"] and self.isTrainPartition:
             # TODO: Permute the features to (B x F x T)
