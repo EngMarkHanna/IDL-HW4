@@ -35,7 +35,7 @@ def PadMask(padded_input, input_lengths):
         input_lengths = (padded_input != 0).sum(dim=1)
 
     # Create range tensor of shape (N, T)
-    range_tensor = torch.arange(seq_len, device=padded_input.device).expand(batch_size, seq_len)
+    range_tensor = torch.arange(seq_len, device=padded_input.device).expand(batch_size, -1)
     
     mask = range_tensor >= input_lengths.unsqueeze(1)
     

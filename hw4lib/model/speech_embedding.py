@@ -327,7 +327,7 @@ class SpeechEmbedding(nn.Module):
             x, x_len = self.cnn(x, x_len)
         if self.blstm is not None:
             x, x_len = self.blstm(x, x_len)
-        return x, x_len.long().view(-1) #Changed here
+        return x, x_len 
     
     def calculate_downsampled_length(self, lengths: torch.Tensor) -> torch.Tensor:
         """
