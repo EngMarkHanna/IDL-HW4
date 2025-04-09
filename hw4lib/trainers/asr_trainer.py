@@ -138,9 +138,17 @@ class ASRTrainer(BaseTrainer):
                     targets_golden.view(-1) #instead of target shifted, Changed here
                 )
                 
-                flat_targets = torch.cat([
-                    targets_golden[i, :transcript_lengths[i]] for i in range(targets_golden.size(0))
-                ])
+                flat_targets = []
+                target_lengths = []
+
+                for i in range(targets_golden.size(0)):
+                    length = transcript_lengths[i].item()
+                    flat_targets.append(targets_golden[i, :length])
+                    target_lengths.append(length)
+
+                flat_targets = torch.cat(flat_targets)
+                target_lengths = torch.tensor(target_lengths, dtype=torch.long, device=flat_targets.device)
+
 
                 # TODO: Calculate CTC loss if needed
                 if self.ctc_weight > 0:
