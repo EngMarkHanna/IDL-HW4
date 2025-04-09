@@ -219,7 +219,7 @@ class Conv2DSubsampling(torch.nn.Module):
         x = self.freq_pool(x)  # (batch, channels, time, 1)
         x = x.squeeze(-1).transpose(1, 2)  # (batch, time, channels)
         
-        # x = x.transpose(1, 2).contiguous().view(x.size(0), x.size(2), -1) # (batch, time, channels)
+        # x = x.transpose(1, 2).contiguous().view(x.size(0), x.size(2), -1) # (batch, time, channels) #Changed here
         # x = self.linear_out(x) # (batch, time, channels)
         x = self.dropout(x)
         

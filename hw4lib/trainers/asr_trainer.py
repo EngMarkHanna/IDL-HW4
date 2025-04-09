@@ -116,6 +116,12 @@ class ASRTrainer(BaseTrainer):
             with torch.autocast(device_type=self.device, dtype=torch.float16):  #torch.float16, Changed here
                 # TODO: get raw predictions and attention weights and ctc inputs from model
                 feats = feats.to(self.device, dtype=torch.get_autocast_dtype(self.device))
+                
+                print("\n[DEBUG] feat_lengths shape:", feat_lengths.shape)
+                print("[DEBUG] feat_lengths dtype:", feat_lengths.dtype)
+                print("[DEBUG] feat_lengths sample:", feat_lengths[0] if feat_lengths.ndim == 1 else feat_lengths[0][:10])
+
+                
                 seq_out, curr_att, ctc_inputs = self.model(
                     feats, feat_lengths, targets_shifted, transcript_lengths
                 )
