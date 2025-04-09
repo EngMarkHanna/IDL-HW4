@@ -340,7 +340,16 @@ class EncoderDecoderTransformer(nn.Module):
         # TODO: Implement encode
 
         # TODO: Apply speech embedding
+        
+        print("[DEBUG][encode] BEFORE embedding - source_lengths shape:", source_lengths.shape)
+        print("source_lengths sample:", source_lengths[:4])
+
         x_enc, x_enc_lengths = self.source_embedding(padded_sources, source_lengths)
+        
+        
+        print("[DEBUG][encode] AFTER embedding - x_enc_lengths shape:", x_enc_lengths.shape)
+        print("x_enc_lengths sample:", x_enc_lengths[:4])
+        
         
         # TODO: Apply positional encoding if not skipped
         # You can try to optionally skipping positional encoding if using an LSTM based speech embedding
@@ -475,7 +484,7 @@ class EncoderDecoderTransformer(nn.Module):
             raise ValueError("source_lengths must be provided during training")
         
         # TODO: Implement forward
-
+        
         # TODO: Encode the source sequence
         encoder_output, pad_mask_src, enc_running_att, ctc_inputs = self.encode(padded_sources, source_lengths)
         
