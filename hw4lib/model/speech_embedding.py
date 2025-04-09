@@ -199,8 +199,8 @@ class Conv2DSubsampling(torch.nn.Module):
         linear_in_dim = self.calculate_downsampled_length(input_dim, 1, 1)
         linear_in_dim *= output_dim
         # TODO: Replace the Linear layer with adaptive pooling and test the performance
-        # self.freq_pool = torch.nn.AdaptiveAvgPool2d((None, 1))  # Pool across frequency only
-        self.linear_out = torch.nn.Linear(linear_in_dim, output_dim)
+        self.freq_pool = torch.nn.AdaptiveAvgPool2d((None, 1))  # Pool across frequency only
+        # self.linear_out = torch.nn.Linear(linear_in_dim, output_dim)
         self.dropout = torch.nn.Dropout(dropout)
 
     def forward(self, x, x_len):
@@ -219,8 +219,8 @@ class Conv2DSubsampling(torch.nn.Module):
         x = self.freq_pool(x)  # (batch, channels, time, 1)
         x = x.squeeze(-1).transpose(1, 2)  # (batch, time, channels)
         
-        x = x.transpose(1, 2).contiguous().view(x.size(0), x.size(2), -1) # (batch, time, channels)
-        x = self.linear_out(x) # (batch, time, channels)
+        # x = x.transpose(1, 2).contiguous().view(x.size(0), x.size(2), -1) # (batch, time, channels)
+        # x = self.linear_out(x) # (batch, time, channels)
         x = self.dropout(x)
         
         x_len = self.calculate_downsampled_length(x_len, self.time_stride1, self.time_stride2)
