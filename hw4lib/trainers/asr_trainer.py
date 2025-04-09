@@ -471,20 +471,16 @@ class ASRTrainer(BaseTrainer):
                         recognition_config['repeat_penalty'],
                         recognition_config['beam_width']
                     )
+                    
                     # raise NotImplementedError # Remove if you implemented the beam search method
                     # Pick best beam
                     seqs = seqs[:, 0, :]
                     scores = scores[:, 0]
                 else:
                     # TODO: Generate sequences using greedy search
-                    seqs, scores = generator.generate_greedy(
-                        prompts,
-                        encoder_output,
-                        pad_mask_src,
-                        recognition_config['temperature'],
-                        recognition_config['repeat_penalty'],
-                        recognition_config['beam_width']
-                    )
+                    seqs, scores = generator.generate_greedy(prompts,
+                                                             temperature=recognition_config['temperature'],
+                                                             repeat_penalty=recognition_config['repeat_penalty'])
                     # raise NotImplementedError # Remove if you implemented the greedy search method
 
                 # Clean up
