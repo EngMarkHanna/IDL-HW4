@@ -392,7 +392,15 @@ class EncoderDecoderTransformer(nn.Module):
         
         # TODO: Return the encoded representation, padding mask, running attention weights, and CTC inputs (see docstring)
         ctc_inputs = {'log_probs': ctc_logits, 'lengths': x_enc_lengths}
+        
+        print("[CTC DEBUG] ctc_logits shape:", ctc_logits.shape)        # Expect (T, B, C)
+        print("[CTC DEBUG] x_enc_lengths shape:", x_enc_lengths.shape)  # Expect (B,)
+        print("[CTC DEBUG] x_enc_lengths dtype:", x_enc_lengths.dtype)  # Expect torch.int64
+        print("[CTC DEBUG] x_enc_lengths:", x_enc_lengths)
+
         return x_enc, pad_mask_src, running_att, ctc_inputs
+    
+    
         # raise NotImplementedError
         
 
