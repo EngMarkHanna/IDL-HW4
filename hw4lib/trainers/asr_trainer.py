@@ -149,7 +149,7 @@ class ASRTrainer(BaseTrainer):
                     ctc_loss = self.ctc_criterion(
                         ctc_inputs["log_probs"].transpose(0, 1),     # (T, B, C)
                         targets_golden[:, :-1],                      # remove EOS
-                        ctc_inputs["lengths"],                       # actual encoder lengths
+                        ctc_inputs["lengths"].detach(),                       # actual encoder lengths
                         transcript_lengths                           # target lengths
                     )
                     loss = ce_loss + self.ctc_weight * ctc_loss
