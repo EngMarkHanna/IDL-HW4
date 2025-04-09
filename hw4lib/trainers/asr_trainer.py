@@ -139,8 +139,13 @@ class ASRTrainer(BaseTrainer):
                 )
                 
                 
+
                 # TODO: Calculate CTC loss if needed
                 if self.ctc_weight > 0:
+                    print("[DEBUG] targets_golden[:, :-1] shape:", targets_golden[:, :-1].shape)
+                    print("[DEBUG] target_lengths shape:", transcript_lengths.shape)
+                    print("[DEBUG] target_lengths dtype:", transcript_lengths.dtype)
+                    print("[DEBUG] target_lengths:", transcript_lengths)
                     ctc_loss = self.ctc_criterion(
                         ctc_inputs["log_probs"].transpose(0, 1),     # (T, B, C)
                         targets_golden[:, :-1],                      # remove EOS
