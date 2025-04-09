@@ -70,12 +70,12 @@ class ASRTrainer(BaseTrainer):
         # TODO: Initialize CTC loss if needed
         # You can use the pad token id as the blank index
         self.ctc_criterion = None
-        self.ctc_weight = self.config['loss'].get('ctc_weight', 0.0)
-        if self.ctc_weight > 0:
-            self.ctc_criterion = nn.CTCLoss(
-                blank=self.tokenizer.blank_id,
-                zero_infinity=True
-            )
+        # self.ctc_weight = self.config['loss'].get('ctc_weight', 0.0)
+        # if self.ctc_weight > 0:
+        #     self.ctc_criterion = nn.CTCLoss(
+        #         blank=self.tokenizer.blank_id,
+        #         zero_infinity=True
+        #     )
         
         # raise NotImplementedError # Remove once implemented
 
