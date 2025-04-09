@@ -77,7 +77,7 @@ class ASRTrainer(BaseTrainer):
                 zero_infinity=True
             )
         
-        self.scaler = torch.amp.GradScaler(device=self.device)
+        self.scaler = torch.amp.GradScaler(device=self.device) #bla bla
         
         
         # raise NotImplementedError # Remove once implemented
@@ -182,7 +182,7 @@ class ASRTrainer(BaseTrainer):
             loss = loss / self.config['training']['gradient_accumulation_steps']
 
             # TODO: Backpropagate the loss
-            self.scaler = self.scaler.scale(loss).backward()
+            self.scaler.scale(loss).backward()
 
             # Only update weights after accumulating enough gradients
             if (i + 1) % self.config['training']['gradient_accumulation_steps'] == 0:
