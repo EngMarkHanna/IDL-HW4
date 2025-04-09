@@ -77,6 +77,7 @@ class ASRTrainer(BaseTrainer):
                 zero_infinity=True
             )
         
+        self.scaler = torch.amp.GradScaler(device=self.device)
         # raise NotImplementedError # Remove once implemented
 
 
