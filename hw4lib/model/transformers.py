@@ -383,7 +383,13 @@ class EncoderDecoderTransformer(nn.Module):
         x_enc = self.encoder_norm(x_enc)
         # TODO: Project to CTC logits
         ctc_logits = self.ctc_head(x_enc).transpose(0, 1)
+        
+        # Ensure x_enc_lengths is 1D and long
+        if x_enc_lengths.ndim > 1:
+            x_enc_lengths = x_enc_lengths.squeeze(-1)
 
+        x_enc_lengths = x_enc_lengths.to(dtype=torch.long, device=x_enc.device)
+        
         # TODO: Return the encoded representation, padding mask, running attention weights, and CTC inputs (see docstring)
         ctc_inputs = {'log_probs': ctc_logits, 'lengths': x_enc_lengths}
         return x_enc, pad_mask_src, running_att, ctc_inputs
