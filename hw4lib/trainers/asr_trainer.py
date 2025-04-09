@@ -157,7 +157,7 @@ class ASRTrainer(BaseTrainer):
                     print("[DEBUG] target_lengths dtype:", transcript_lengths.dtype)
                     print("[DEBUG] target_lengths:", transcript_lengths)
                     ctc_loss = self.ctc_criterion(
-                        ctc_inputs["log_probs"].transpose(0, 1),     # (T, B, C)
+                        ctc_inputs["log_probs"],     # (T, B, C)
                         flat_targets, #targets_golden[:, :-1],                      # remove EOS
                         ctc_inputs["lengths"].detach(),                       # actual encoder lengths
                         transcript_lengths                           # target lengths
