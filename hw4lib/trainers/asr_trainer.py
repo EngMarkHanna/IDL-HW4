@@ -70,12 +70,12 @@ class ASRTrainer(BaseTrainer):
         # TODO: Initialize CTC loss if needed
         # You can use the pad token id as the blank index
         self.ctc_criterion = None
-        # self.ctc_weight = self.config['loss'].get('ctc_weight', 0.0)
-        # if self.ctc_weight > 0:
-        #     self.ctc_criterion = nn.CTCLoss(
-        #         blank=self.tokenizer.blank_id,
-        #         zero_infinity=True
-        #     )
+        self.ctc_weight = self.config['loss'].get('ctc_weight', 0.0)
+        if self.ctc_weight > 0:
+            self.ctc_criterion = nn.CTCLoss(
+                blank=self.tokenizer.blank_id,
+                zero_infinity=True
+            )
         
         # raise NotImplementedError # Remove once implemented
 
@@ -142,10 +142,10 @@ class ASRTrainer(BaseTrainer):
                 # TODO: Calculate CTC loss if needed
                 if self.ctc_weight > 0:
                     ctc_loss = self.ctc_criterion(
-                        ctc_inputs.log_softmax(2).transpose(0, 1),
-                        targets_golden[:, :-1], #Changed here
-                        feat_lengths,
-                        transcript_lengths
+                        ctc_inputs["log_probs"].transpose(0, 1),     # (T, B, C)
+                        targets_golden[:, :-1],                      # remove EOS
+                        ctc_inputs["lengths"],                       # actual encoder lengths
+                        transcript_lengths                           # target lengths
                     )
                     loss = ce_loss + self.ctc_weight * ctc_loss
                 else:
