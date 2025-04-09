@@ -341,14 +341,14 @@ class EncoderDecoderTransformer(nn.Module):
 
         # TODO: Apply speech embedding
         
-        print("[DEBUG][encode] BEFORE embedding - source_lengths shape:", source_lengths.shape)
-        print("source_lengths sample:", source_lengths[:4])
+        # print("[DEBUG][encode] BEFORE embedding - source_lengths shape:", source_lengths.shape)
+        # print("source_lengths sample:", source_lengths[:4])
 
         x_enc, x_enc_lengths = self.source_embedding(padded_sources, source_lengths)
         
         
-        print("[DEBUG][encode] AFTER embedding - x_enc_lengths shape:", x_enc_lengths.shape)
-        print("x_enc_lengths sample:", x_enc_lengths[:4])
+        # print("[DEBUG][encode] AFTER embedding - x_enc_lengths shape:", x_enc_lengths.shape)
+        # print("x_enc_lengths sample:", x_enc_lengths[:4])
         
         
         # TODO: Apply positional encoding if not skipped
@@ -361,9 +361,9 @@ class EncoderDecoderTransformer(nn.Module):
         x_enc = self.dropout(x_enc)
 
         # TODO: Create source padding mask on the same device as the input
-        print("[DEBUG] x_enc shape:", x_enc.shape)
-        print("[DEBUG] x_enc_lengths shape:", x_enc_lengths.shape)
-        print("[DEBUG] x_enc_lengths:", x_enc_lengths)
+        # print("[DEBUG] x_enc shape:", x_enc.shape)
+        # print("[DEBUG] x_enc_lengths shape:", x_enc_lengths.shape)
+        # print("[DEBUG] x_enc_lengths:", x_enc_lengths)
 
         pad_mask_src = PadMask(x_enc, x_enc_lengths).to(x_enc.device)
 
@@ -393,10 +393,10 @@ class EncoderDecoderTransformer(nn.Module):
         # TODO: Return the encoded representation, padding mask, running attention weights, and CTC inputs (see docstring)
         ctc_inputs = {'log_probs': ctc_logits, 'lengths': x_enc_lengths}
         
-        print("[CTC DEBUG] ctc_logits shape:", ctc_logits.shape)        # Expect (T, B, C)
-        print("[CTC DEBUG] x_enc_lengths shape:", x_enc_lengths.shape)  # Expect (B,)
-        print("[CTC DEBUG] x_enc_lengths dtype:", x_enc_lengths.dtype)  # Expect torch.int64
-        print("[CTC DEBUG] x_enc_lengths:", x_enc_lengths)
+        # print("[CTC DEBUG] ctc_logits shape:", ctc_logits.shape)        # Expect (T, B, C)
+        # print("[CTC DEBUG] x_enc_lengths shape:", x_enc_lengths.shape)  # Expect (B,)
+        # print("[CTC DEBUG] x_enc_lengths dtype:", x_enc_lengths.dtype)  # Expect torch.int64
+        # print("[CTC DEBUG] x_enc_lengths:", x_enc_lengths)
 
         return x_enc, pad_mask_src, running_att, ctc_inputs
     

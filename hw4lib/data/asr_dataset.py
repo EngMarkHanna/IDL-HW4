@@ -350,10 +350,10 @@ class ASRDataset(Dataset):
         # TODO: Return the padded features, padded shifted, padded golden, feature lengths, and transcript lengths
         # raise NotImplementedError # Remove once implemented
         
-        print("[DEBUG][collate_fn] BATCH SIZES:")
-        print("  - padded_feats shape:", padded_feats.shape)
-        print("  - feat_lengths shape:", feat_lengths.shape)
-        print("  - sample feat_lengths:", feat_lengths[:4])
+        # print("[DEBUG][collate_fn] BATCH SIZES:")
+        # print("  - padded_feats shape:", padded_feats.shape)
+        # print("  - feat_lengths shape:", feat_lengths.shape)
+        # print("  - sample feat_lengths:", feat_lengths[:4])
 
         
         return padded_feats, padded_shifted, padded_golden, feat_lengths, transcript_lengths

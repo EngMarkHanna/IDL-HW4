@@ -120,9 +120,9 @@ class ASRTrainer(BaseTrainer):
                 # TODO: get raw predictions and attention weights and ctc inputs from model
                 feats = feats.to(self.device, dtype=torch.get_autocast_dtype(self.device))
                 
-                print("\n[DEBUG] feat_lengths shape:", feat_lengths.shape)
-                print("[DEBUG] feat_lengths dtype:", feat_lengths.dtype)
-                print("[DEBUG] feat_lengths sample:", feat_lengths[0] if feat_lengths.ndim == 1 else feat_lengths[0][:10])
+                # print("\n[DEBUG] feat_lengths shape:", feat_lengths.shape)
+                # print("[DEBUG] feat_lengths dtype:", feat_lengths.dtype)
+                # print("[DEBUG] feat_lengths sample:", feat_lengths[0] if feat_lengths.ndim == 1 else feat_lengths[0][:10])
 
                 
                 seq_out, curr_att, ctc_inputs = self.model(
@@ -155,10 +155,10 @@ class ASRTrainer(BaseTrainer):
 
                 # TODO: Calculate CTC loss if needed
                 if self.ctc_weight > 0:
-                    print("[DEBUG] targets_golden[:, :-1] shape:", targets_golden[:, :-1].shape)
-                    print("[DEBUG] target_lengths shape:", transcript_lengths.shape)
-                    print("[DEBUG] target_lengths dtype:", transcript_lengths.dtype)
-                    print("[DEBUG] target_lengths:", transcript_lengths)
+                    # print("[DEBUG] targets_golden[:, :-1] shape:", targets_golden[:, :-1].shape)
+                    # print("[DEBUG] target_lengths shape:", transcript_lengths.shape)
+                    # print("[DEBUG] target_lengths dtype:", transcript_lengths.dtype)
+                    # print("[DEBUG] target_lengths:", transcript_lengths)
                     ctc_loss = self.ctc_criterion(
                         ctc_inputs["log_probs"],     # (T, B, C)
                         flat_targets, #targets_golden[:, :-1],                      # remove EOS
