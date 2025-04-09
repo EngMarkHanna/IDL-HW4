@@ -463,7 +463,7 @@ class ASRTrainer(BaseTrainer):
                 # TODO: Generate sequences
                 if recognition_config['beam_width'] > 1:
                     # TODO: If you have implemented beam search, generate sequences using beam search
-                    seqs, scores = generator.generate(
+                    seqs, scores = generator.generate_beam(
                         prompts,
                         encoder_output,
                         pad_mask_src,
@@ -477,7 +477,7 @@ class ASRTrainer(BaseTrainer):
                     scores = scores[:, 0]
                 else:
                     # TODO: Generate sequences using greedy search
-                    seqs, scores = generator.generate(
+                    seqs, scores = generator.generate_greedy(
                         prompts,
                         encoder_output,
                         pad_mask_src,
