@@ -348,7 +348,7 @@ class SequenceGenerator:
         batch_size = x.size(0)
         device = x.device
         # vocab_size = self.vocab_size
-        vocab_size = logits.size(-1)
+        # vocab_size = logits.size(-1)
         
         sequences = x.unsqueeze(1).repeat(1, beam_width, 1)  # (batch_size, beam_width, seq_len)
         scores = torch.zeros(batch_size, beam_width, device=device)
@@ -374,8 +374,8 @@ class SequenceGenerator:
             flat_log_probs = log_probs.view(batch_size, -1) 
             topk_scores, topk_indices = flat_log_probs.topk(beam_width, dim=-1)
             
-            beam_indices = topk_indices // vocab_size
-            token_indices = topk_indices % vocab_size
+            beam_indices = topk_indices // logits.size(-1)
+            token_indices = topk_indices % logits.size(-1)
             
             new_sequences = []
             for batch_idx in range(batch_size):
