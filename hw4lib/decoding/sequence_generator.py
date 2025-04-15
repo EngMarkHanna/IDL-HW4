@@ -66,10 +66,7 @@ class SequenceGenerator:
         self.tokenizer = tokenizer
         self.max_length = max_length
         self.device = device
-
-        self.eos_token_id = tokenizer.eos_id
-        
-        
+                
     def _apply_repeat_penalty(
             self,
             logits: torch.Tensor,
@@ -350,7 +347,7 @@ class SequenceGenerator:
 
         batch_size = x.size(0)
         device = x.device
-        vocab_size = self.vocab_size
+        # vocab_size = self.vocab_size
         
         sequences = x.unsqueeze(1).repeat(1, beam_width, 1)  # (batch_size, beam_width, seq_len)
         scores = torch.zeros(batch_size, beam_width, device=device)
@@ -360,6 +357,8 @@ class SequenceGenerator:
         for step in range(x.size(1), self.max_length):
             flat_sequences = sequences.view(-1, sequences.size(-1))
             logits = self.score_fn(flat_sequences)  # (batch_size * beam_width, vocab_size)
+            
+            vocab_size = logits.size(-1)
             
             if repeat_penalty != 1.0:
                 logits = self._apply_repeat_penalty(logits, flat_sequences, repeat_penalty)
