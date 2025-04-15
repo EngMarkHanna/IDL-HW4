@@ -317,7 +317,7 @@ class SequenceGenerator:
 
 #         return sorted_x, sorted_scores
 
-def generate_beam(
+    def generate_beam(
             self,
             x: torch.Tensor,
             beam_width: int,
@@ -333,8 +333,8 @@ def generate_beam(
             repeat_penalty: Penalty for repeated tokens
         Returns:
             Tuple of tensors: (sequences, scores)
-             - sequences is of shape (batch_size, beam_width, sequence_length) where each sequence in a beam set is sorted by score
-             - scores is of shape (batch_size, beam_width)
+                - sequences is of shape (batch_size, beam_width, sequence_length) where each sequence in a beam set is sorted by score
+                - scores is of shape (batch_size, beam_width)
         """
         # Add input validation
         if not torch.is_tensor(x):
