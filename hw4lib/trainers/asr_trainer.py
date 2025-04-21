@@ -141,17 +141,36 @@ class ASRTrainer(BaseTrainer):
                     targets_golden.view(-1) #instead of target shifted, Changed here
                 )
                 
-                flat_targets = []
-                target_lengths = []
+                # flat_targets = []
+                # target_lengths = []
 
-                for i in range(targets_golden.size(0)):
-                    length = transcript_lengths[i].item()
-                    flat_targets.append(targets_golden[i, :length])
-                    target_lengths.append(length)
+                # for i in range(targets_golden.size(0)):
+                #     length = transcript_lengths[i].item()
+                #     flat_targets.append(targets_golden[i, :length])
+                #     target_lengths.append(length)
 
-                flat_targets = torch.cat(flat_targets)
-                target_lengths = torch.tensor(target_lengths, dtype=torch.long, device=flat_targets.device)
+                # flat_targets = torch.cat(flat_targets)
+                # target_lengths = torch.tensor(target_lengths, dtype=torch.long, device=flat_targets.device)
 
+
+                # # TODO: Calculate CTC loss if needed
+                # if self.ctc_weight > 0:
+                #     # print("[DEBUG] targets_golden[:, :-1] shape:", targets_golden[:, :-1].shape)
+                #     # print("[DEBUG] target_lengths shape:", transcript_lengths.shape)
+                #     # print("[DEBUG] target_lengths dtype:", transcript_lengths.dtype)
+                #     # print("[DEBUG] target_lengths:", transcript_lengths)
+                #     ctc_loss = self.ctc_criterion(
+                #         ctc_inputs["log_probs"],     # (T, B, C)
+                #         flat_targets, #targets_golden[:, :-1],                      # remove EOS
+                #         ctc_inputs["lengths"].detach(),                       # actual encoder lengths
+                #         transcript_lengths                           # target lengths
+                #     )
+                #     loss = ce_loss + self.ctc_weight * ctc_loss
+                # else:
+                #     ctc_loss = torch.tensor(0.0)
+                #     loss = ce_loss
+                
+                
 
                 # TODO: Calculate CTC loss if needed
                 if self.ctc_weight > 0:
@@ -161,14 +180,15 @@ class ASRTrainer(BaseTrainer):
                     # print("[DEBUG] target_lengths:", transcript_lengths)
                     ctc_loss = self.ctc_criterion(
                         ctc_inputs["log_probs"],     # (T, B, C)
-                        flat_targets, #targets_golden[:, :-1],                      # remove EOS
-                        ctc_inputs["lengths"].detach(),                       # actual encoder lengths
+                        targets_golden, #targets_golden[:, :-1],                      # remove EOS
+                        ctc_inputs["lengths"],                       # actual encoder lengths
                         transcript_lengths                           # target lengths
                     )
-                    loss = ce_loss + self.ctc_weight * ctc_loss
+                    loss = (1 - self.ctc_weight) * ce_loss + self.ctc_weight * ctc_loss
                 else:
                     ctc_loss = torch.tensor(0.0)
                     loss = ce_loss
+                    
 
             # Calculate metrics
             batch_tokens = transcript_lengths.sum().item()
